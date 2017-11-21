@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/login_page_background"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="@dimen/sign_up_page_logo_width"
+            android:onClick="pickImage"
+            android:layout_height="@dimen/sign_up_page_logo_height"
+            android:src="@drawable/ic_default_profile"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/fullNameSignUpPage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/login_page_full_name_hint"
+                android:textColorHint="@color/login_page_text_hint"
+                android:inputType="textEmailAddress"
+                android:textColor="@android:color/white" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/emailSignUpPage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/login_page_email_hint"
+                android:textColorHint="@color/login_page_text_hint"
+                android:inputType="textEmailAddress"
+                android:textColor="@android:color/white" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/passwordSignUpPage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="true"
+                android:hint="@string/login_page_password_hint"
+                android:imeActionId="@+id/login"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:textColorHint="@color/login_page_text_hint"
+                android:maxLines="1"
+                android:textColor="@android:color/white" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/retypePasswordSignUpPage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="true"
+                android:hint="@string/retype_password_hint"
+                android:imeActionId="@+id/login"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:textColorHint="@color/login_page_text_hint"
+                android:maxLines="1"
+                android:textColor="@android:color/white" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <Button
+            android:id="@+id/signUpButton"
+            style="?android:textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/login_page_button_background"
+            android:text="@string/signup_page_button_text"
+            android:textColor="@color/login_page_button_text"
+            android:textStyle="bold"
+            android:onClick="signUpFunction"/>
+
+        <Button
+            android:id="@+id/loginRedirectButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:background="@null"
+            android:text="@string/signup_page_login_page"
+            android:textColor="@color/colorAccent"
+            android:textAllCaps="false"
+            android:onClick="loginFunction"
+            android:textSize="15sp" />
+    </LinearLayout>
+</RelativeLayout>
