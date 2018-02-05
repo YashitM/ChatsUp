@@ -43,6 +43,7 @@ public class PrivateChatActivity extends AppCompatActivity {
     private String selectedUserUID;
 
     private boolean nodeFound = false;
+    private String foundNodeKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,10 +92,11 @@ public class PrivateChatActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             ChatMessage chat = snapshot.getValue(ChatMessage.class);
-                            if(chat.getSender().equals(mUser.getUid()) && chat.getReceiver().equals(selectedUserUID)) {
+                            if( (chat.getSender().equals(mUser.getUid()) && chat.getReceiver().equals(selectedUserUID)) || (chat.getReceiver().equals(mUser.getUid()) && chat.getSender().equals(selectedUserUID))) {
                                 Toast.makeText(PrivateChatActivity.this, "Got Node", Toast.LENGTH_SHORT).show();
                                 sessionChat = chat;
                                 nodeFound = true;
+                                foundNodeKey = snapshot.getKey();
                             }
                         }
                     }
@@ -108,7 +110,6 @@ public class PrivateChatActivity extends AppCompatActivity {
         final String messageText = message.getText().toString();
         if(!messageText.isEmpty()) {
             Calendar c = Calendar.getInstance();
-            System.out.println("Current time => "+c.getTime());
 
             @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             final String formattedDate = df.format(c.getTime());
@@ -121,17 +122,22 @@ public class PrivateChatActivity extends AppCompatActivity {
                     if (snapshot.hasChild("chat")) {
                         if(nodeFound) {
                             sessionChat.addMessages(newMessage);
+                            rootRef.child("chat").child(foundNodeKey).child("messages").setValue(sessionChat.getMessages());
                         }
                         else {
                             sessionChat = new ChatMessage(mUser.getUid(),selectedUserUID);
                             sessionChat.addMessages(newMessage);
+                            foundNodeKey = rootRef.child("chat").push().getKey();
+                            rootRef.child("chat").child(foundNodeKey).setValue(sessionChat);
+                            nodeFound = true;
                         }
                     }
                     else {
                         sessionChat = new ChatMessage(mUser.getUid(),selectedUserUID);
                         sessionChat.addMessages(newMessage);
-                        String key = rootRef.child("chat").push().getKey();
-                        rootRef.child("chat").child(key).setValue(sessionChat);
+                        foundNodeKey = rootRef.child("chat").push().getKey();
+                        rootRef.child("chat").child(foundNodeKey).setValue(sessionChat);
+                        nodeFound = true;
                     }
                 }
 
