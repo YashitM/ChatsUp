@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -78,7 +79,7 @@ public class PrivateChatActivity extends AppCompatActivity {
         mUser = mAuth.getCurrentUser();
 
         assert mUser != null;
-        adapter = new ChatMessageAdapter(sessionChat.getMessages(),mUser.getDisplayName());
+        adapter = new ChatMessageAdapter(sessionChat.getMessages(),mUser.getUid());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             rv.setAdapter(adapter);
         }
@@ -93,8 +94,10 @@ public class PrivateChatActivity extends AppCompatActivity {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             ChatMessage chat = snapshot.getValue(ChatMessage.class);
                             if( (chat.getSender().equals(mUser.getUid()) && chat.getReceiver().equals(selectedUserUID)) || (chat.getReceiver().equals(mUser.getUid()) && chat.getSender().equals(selectedUserUID))) {
-                                Toast.makeText(PrivateChatActivity.this, "Got Node", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(PrivateChatActivity.this, "Got Node", Toast.LENGTH_SHORT).show();
                                 sessionChat = chat;
+                                Toast.makeText(PrivateChatActivity.this, "", Toast.LENGTH_SHORT).show();
+                                adapter.notifyDataSetChanged();
                                 nodeFound = true;
                                 foundNodeKey = snapshot.getKey();
                             }
@@ -119,22 +122,15 @@ public class PrivateChatActivity extends AppCompatActivity {
             rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    if (snapshot.hasChild("chat")) {
-                        if(nodeFound) {
-                            sessionChat.addMessages(newMessage);
-                            rootRef.child("chat").child(foundNodeKey).child("messages").setValue(sessionChat.getMessages());
-                        }
-                        else {
-                            sessionChat = new ChatMessage(mUser.getUid(),selectedUserUID);
-                            sessionChat.addMessages(newMessage);
-                            foundNodeKey = rootRef.child("chat").push().getKey();
-                            rootRef.child("chat").child(foundNodeKey).setValue(sessionChat);
-                            nodeFound = true;
-                        }
+                    if(nodeFound) {
+                        sessionChat.addMessages(newMessage);
+                        adapter.notifyDataSetChanged();
+                        rootRef.child("chat").child(foundNodeKey).child("messages").setValue(sessionChat.getMessages());
                     }
                     else {
                         sessionChat = new ChatMessage(mUser.getUid(),selectedUserUID);
                         sessionChat.addMessages(newMessage);
+                        adapter.notifyDataSetChanged();
                         foundNodeKey = rootRef.child("chat").push().getKey();
                         rootRef.child("chat").child(foundNodeKey).setValue(sessionChat);
                         nodeFound = true;
@@ -146,7 +142,6 @@ public class PrivateChatActivity extends AppCompatActivity {
 
                 }
             });
-            adapter.notifyDataSetChanged();
         }
         else {
             Toast.makeText(PrivateChatActivity.this, "Please Enter a Message", Toast.LENGTH_SHORT).show();

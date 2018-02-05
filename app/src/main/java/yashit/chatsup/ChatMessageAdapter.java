@@ -22,7 +22,6 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-import yashit.chatsup.DataObjects.ChatMessage;
 import yashit.chatsup.DataObjects.Message;
 
 public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.MyViewHolder>{
@@ -51,9 +50,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         holder.messageTV.setText(currentObject.getMessage());
         holder.nameTV.setText(currentObject.getSender());
         holder.timeTV.setText(currentObject.getTime());
-//        if(currentObject.getSender().equals(sessionUsername)) {
-        holder.mCardView.setCardBackgroundColor(Color.LTGRAY);
-//        }
+        if(currentObject.getSender().equals(sessionUsername)) {
+            holder.mCardView.setCardBackgroundColor(Color.LTGRAY);
+        }
 
         setFadeAnimation(holder.itemView);
 
