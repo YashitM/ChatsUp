@@ -9,8 +9,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import yashit.chatsup.DataObjects.ChatMessage;
-
 /**
  * Created by yashi on 03-Jul-17.
  */

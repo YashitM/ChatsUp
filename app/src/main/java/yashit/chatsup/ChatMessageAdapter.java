@@ -50,9 +50,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         holder.messageTV.setText(currentObject.getMessage());
         holder.nameTV.setText(currentObject.getSender());
         holder.timeTV.setText(currentObject.getTime());
-        if(currentObject.getSender().equals(sessionUsername)) {
-            holder.mCardView.setCardBackgroundColor(Color.LTGRAY);
-        }
+//        if(currentObject.getSender().equals(sessionUsername)) {
+        holder.mCardView.setCardBackgroundColor(Color.LTGRAY);
+//        }
 
         setFadeAnimation(holder.itemView);
 
@@ -84,7 +84,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             messageTV = (TextView) v.findViewById(R.id.chatPageMessageTV);
             nameTV = (TextView) v.findViewById(R.id.chatMessageName);
             timeTV = (TextView) v.findViewById(R.id.chatPageTimeTextView);
-            mCardView.setOnClickListener((View.OnClickListener) this);
+//            mCardView.setOnClickListener((View.OnClickListener) this);
         }
     }
 }

@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -56,7 +58,18 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
 
+        assert currentUser != null;
+//        Toast.makeText(HomePage.this, currentUser.getEmail(), Toast.LENGTH_SHORT).show();
 
+        rv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String username = (String) rv.getItemAtPosition(position);
+                Intent privateChat = new Intent(HomePage.this, PrivateChatActivity.class);
+                privateChat.putExtra("SELECTED_USERNAME", username);
+                startActivity(privateChat);
+            }
+        });
 
         root = FirebaseDatabase.getInstance().getReference().getRoot().child("users");
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, userList);
@@ -66,12 +79,17 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         userList.clear();
+                        userList.add("lol");
+                        userList.add("lol1");
+                        userList.add("lol2");
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             UserProfile user = snapshot.getValue(UserProfile.class);
                             String username = user.getFullName();
-                            userList.add(username);
-                            Toast.makeText(HomePage.this, username , Toast.LENGTH_SHORT).show();
-                            arrayAdapter.notifyDataSetChanged();
+                            if(!user.getEmail().equals(currentUser.getEmail())) {
+                                Toast.makeText(HomePage.this, username, Toast.LENGTH_SHORT).show();
+                                userList.add(username);
+                                arrayAdapter.notifyDataSetChanged();
+                            }
                         }
                     }
                     @Override
@@ -79,54 +97,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
                     }
                 });
-
-//        root.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                userList.clear();
-//                Iterator i = dataSnapshot.getChildren().iterator();
-//                int tempCounter = 0;
-//                String name;
-//                while (i.hasNext()){
-//                    Object dsp = ((DataSnapshot) i.next()).getValue();
-//                    Toast.makeText(HomePage.this, dsp.toString(), Toast.LENGTH_SHORT).show();
-////                    String data = ((DataSnapshot) i.next()).getValue().toString();
-////                    String[] splitData = data.split(",");
-////                    //Name is printed 3rd in the list.
-////                    String[] nameData = splitData[2].split("=");
-////                    name = nameData[1].substring(0, nameData[1].length() - 1);
-////                    userList.add(name);
-////                    Toast.makeText(HomePage.this, Arrays.toString(nameData), Toast.LENGTH_SHORT).show();
-////                      if(tempCounter==0) {
-////                        tempCounter += 1;
-////                    }
-////                    else if(tempCounter==1) {
-////                        Object dsp = ((DataSnapshot) i.next()).getValue();
-////                        name = dsp.toString();
-////                        tempCounter+=1;
-////                    }
-////                    else if(tempCounter==2) {
-////                        tempCounter=0;
-////                    }
-////                    String[] keySplit = key.split("->");
-////                    String name1 = keySplit[0];
-////                    String name2 = keySplit[1];
-////                    if(name1.equals(currentUser)) {
-////                        userList.add(name2);
-//
-////                    }
-////                    else if(name2.equals(currentUser)){
-////                        userList.add(name1);
-////                    }
-//                }
-//                arrayAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
