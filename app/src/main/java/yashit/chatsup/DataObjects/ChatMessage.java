@@ -1,26 +1,32 @@
 package yashit.chatsup.DataObjects;
 
+import java.util.ArrayList;
+
 /**
  * Created by yashi on 02-Jul-17.
  */
 
 public class ChatMessage {
-    private String message;
+    private ArrayList<Message> messages;
     private String sender;
-    private String time;
+    private String receiver;
 
-    public ChatMessage(String message, String sender, String time) {
-        this.message = message;
+    public ChatMessage() {
+        messages = new ArrayList<>();
+    }
+
+    public ChatMessage(String sender, String receiver) {
+        messages = new ArrayList<>();
         this.sender = sender;
-        this.time = time;
+        this.receiver = receiver;
     }
 
-    public String getMessage() {
-        return message;
+    public ArrayList<Message> getMessages() {
+        return messages;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void addMessages(Message message) {
+        this.messages.add(message);
     }
 
     public String getSender() {
@@ -31,11 +37,11 @@ public class ChatMessage {
         this.sender = sender;
     }
 
-    public String getTime() {
-        return time;
+    public String getReceiver() {
+        return receiver;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 }

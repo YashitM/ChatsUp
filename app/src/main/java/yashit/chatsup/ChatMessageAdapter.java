@@ -23,10 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import yashit.chatsup.DataObjects.ChatMessage;
+import yashit.chatsup.DataObjects.Message;
 
 public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.MyViewHolder>{
 
-    private static ArrayList<ChatMessage> chats;
+    private static ArrayList<Message> chats;
     private String sessionUsername;
     Context context;
 
@@ -38,7 +39,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         return vh;
     }
 
-    public ChatMessageAdapter(ArrayList<ChatMessage> items, String username) {
+    public ChatMessageAdapter(ArrayList<Message> items, String username) {
         chats = items;
         sessionUsername = username;
     }
@@ -46,7 +47,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        ChatMessage currentObject = chats.get(position);
+        Message currentObject = chats.get(position);
         holder.messageTV.setText(currentObject.getMessage());
         holder.nameTV.setText(currentObject.getSender());
         holder.timeTV.setText(currentObject.getTime());
