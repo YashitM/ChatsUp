@@ -46,6 +46,8 @@ public class PrivateChatActivity extends AppCompatActivity {
     private boolean nodeFound = false;
     private String foundNodeKey;
 
+    private ArrayList<Message> messages = sessionChat.getMessages();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +68,7 @@ public class PrivateChatActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
+
                     }
                 });
 
@@ -79,10 +82,8 @@ public class PrivateChatActivity extends AppCompatActivity {
         mUser = mAuth.getCurrentUser();
 
         assert mUser != null;
-        adapter = new ChatMessageAdapter(sessionChat.getMessages(),mUser.getUid());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            rv.setAdapter(adapter);
-        }
+        adapter = new ChatMessageAdapter(messages,mUser.getUid());
+        rv.setAdapter(adapter);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
         rv.setItemAnimator(new DefaultItemAnimator());
@@ -96,8 +97,10 @@ public class PrivateChatActivity extends AppCompatActivity {
                             if( (chat.getSender().equals(mUser.getUid()) && chat.getReceiver().equals(selectedUserUID)) || (chat.getReceiver().equals(mUser.getUid()) && chat.getSender().equals(selectedUserUID))) {
 //                                Toast.makeText(PrivateChatActivity.this, "Got Node", Toast.LENGTH_SHORT).show();
                                 sessionChat = chat;
-                                Toast.makeText(PrivateChatActivity.this, "", Toast.LENGTH_SHORT).show();
+                                messages.clear();
+                                messages.addAll(sessionChat.getMessages());
                                 adapter.notifyDataSetChanged();
+//                                Toast.makeText(PrivateChatActivity.this, String.valueOf(messages.get(0).getMessage()), Toast.LENGTH_SHORT).show();
                                 nodeFound = true;
                                 foundNodeKey = snapshot.getKey();
                             }
@@ -118,18 +121,28 @@ public class PrivateChatActivity extends AppCompatActivity {
             final String formattedDate = df.format(c.getTime());
             final Message newMessage = new Message(messageText, mUser.getUid(), formattedDate);
 //            chatObject.add(new ChatMessage(messageText, mUser.getDisplayName(), username));
+//            messages.add(new Message(messageText, "Yashit", "kihsdkfjshfd"));
+//            adapter.notifyDataSetChanged();
             final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
             rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     if(nodeFound) {
                         sessionChat.addMessages(newMessage);
+                        messages.clear();
+//                        for(Message m : sessionChat.getMessages()) {
+//                            messages.add(m);
+//                            adapter.notifyDataSetChanged();
+//                        }
+                        messages.addAll(sessionChat.getMessages());
                         adapter.notifyDataSetChanged();
                         rootRef.child("chat").child(foundNodeKey).child("messages").setValue(sessionChat.getMessages());
                     }
                     else {
                         sessionChat = new ChatMessage(mUser.getUid(),selectedUserUID);
                         sessionChat.addMessages(newMessage);
+                        messages.clear();
+                        messages.addAll(sessionChat.getMessages());
                         adapter.notifyDataSetChanged();
                         foundNodeKey = rootRef.child("chat").push().getKey();
                         rootRef.child("chat").child(foundNodeKey).setValue(sessionChat);
