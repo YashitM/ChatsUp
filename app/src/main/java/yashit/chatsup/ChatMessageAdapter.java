@@ -49,7 +49,6 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Message currentObject = chats.get(position);
         holder.messageTV.setText(currentObject.getMessage());
-        Log.d("Test",currentObject.getMessage());
         holder.nameTV.setText(currentObject.getSender());
         holder.timeTV.setText(currentObject.getTime());
         if(currentObject.getSender().equals(sessionUsername)) {

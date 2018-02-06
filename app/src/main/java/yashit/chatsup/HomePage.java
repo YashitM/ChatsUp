@@ -79,9 +79,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         userList.clear();
-                        userList.add("lol");
-                        userList.add("lol1");
-                        userList.add("lol2");
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             UserProfile user = snapshot.getValue(UserProfile.class);
                             String username = user.getFullName();
